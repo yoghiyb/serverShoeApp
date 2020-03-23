@@ -52,7 +52,9 @@ class OrderController extends Controller
         return response()->json($unique_order, 200);
     }
 
-    // public function showByOrderNo($order_no){
+    public function showByOrderNo($order_no){
+        $order = Order::where('order_no', $order_no)->orderBy('created_at', 'asc')->get();
 
-    // }
+        return response()->json($order, 200);
+    }
 }

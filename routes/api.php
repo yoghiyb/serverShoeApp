@@ -39,10 +39,12 @@ Route::middleware('jwt.verify')->group(function(){
     Route::post('order', 'Api\OrderController@create');
     Route::post('order/confirm', 'Api\OrderController@confirmation');
     Route::get('order/list/{id}', 'Api\OrderController@showAllLastOrder');
+    Route::get('order/{order_no}', 'Api\OrderController@showByOrderNo');
 
     //Loaksi API JWT
     Route::post('partner/location', 'Api\LocationController@create');
     Route::get('partner/location/{partner_id}', 'Api\LocationController@show');
     Route::put('partner/location/{partner_id}', 'Api\LocationController@update');
+
 });
 
