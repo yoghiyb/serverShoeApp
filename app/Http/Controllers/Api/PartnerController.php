@@ -87,16 +87,19 @@ class PartnerController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return $this->responseWithToken($token);
+        $partner = Partner::where('email', $request->email)->first();
+
+        return $this->responseWithToken($token, $partner);
 
         // return response()->json(["status" => "oke jancok!"]);
     }
 
-    public function responseWithToken($token){
+    public function responseWithToken($token, $partner){
         return response()->json([
             'access' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('partner')->factory()->getTTL() * 60
+            'expires_in' => Auth::guard('partner')->factory()->getTTL() * 60,
+            'user' => $partner
         ]);
     }
     /**

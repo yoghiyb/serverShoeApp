@@ -46,5 +46,9 @@ Route::middleware('jwt.verify')->group(function(){
     Route::get('partner/location/{partner_id}', 'Api\LocationController@show');
     Route::put('partner/location/{partner_id}', 'Api\LocationController@update');
 
+    //Service API JWT
+    Route::post('service', 'Api\ServiceController@store');
+    Route::put('service/{id}', 'Api\ServiceController@update');
+    Route::get('service/{id}', 'Api\ServiceController@show');
 });
 

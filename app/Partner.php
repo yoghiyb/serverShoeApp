@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-// use Illuminate\Foundation\Auth\Partner as Authenticatable;
+use Illuminate\Foundation\Auth\Partner as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Auth\Authenticatable;
+// use Illuminate\Contracts\Auth\Authenticatable;
 
-class Partner extends Model implements JWTSubject
+class Partner extends Authenticatable implements JWTSubject
 {
     // use Notifiable;
 
