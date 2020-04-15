@@ -29,6 +29,10 @@ class Partner extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Location');
     }
 
+    public function service(){
+        return $this->hasMany('App\Service');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

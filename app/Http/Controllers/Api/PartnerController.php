@@ -96,7 +96,7 @@ class PartnerController extends Controller
 
     public function responseWithToken($token, $partner){
         return response()->json([
-            'access' => $token,
+            'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('partner')->factory()->getTTL() * 60,
             'user' => $partner
@@ -108,6 +108,7 @@ class PartnerController extends Controller
     public function show($id){
         $partner = Partner::findOrFail($id);
         $partner->location;
+        $partner->service;
 
         return response()->json(compact('partner'),200);
     }
@@ -141,9 +142,33 @@ class PartnerController extends Controller
             'end_working_time' => $request->end_working_time,
             'start_working_days' => $request->start_working_days,
             'end_working_days' => $request->end_working_days,
-            'phone_number' => 'required|string',
+            'phone_number' => $request->phone_number,
         ]);
 
         return response()->json(compact('updatePartner'), 200);
+    }
+
+    public function updateShop(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'store_name' => 'required|string|max:50',
+            'address' => 'required|string|max:100',
+            'start_working_time' => 'required|string',
+            'end_working_time' => 'required|string',
+            'start_working_days' => 'required|string',
+            'end_working_days' => 'required|string',
+            'phone_number' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        try {
+            $updateShop = $request->all();
+            Partner::where('id', $id)->update($updateShop);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th]);
+        }
+        return response()->json(['success' => 'berhasil update toko'], 200);
     }
 }
