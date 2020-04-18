@@ -35,6 +35,8 @@ Route::middleware('jwt.verify')->group(function(){
     Route::get('partner/{id}', 'Api\PartnerController@show');
     Route::put('partner/{id}', 'Api\PartnerController@update');
     Route::patch('partner/shop/{id}', 'Api\PartnerController@updateShop');
+    Route::put('partner/image/{id}','Api\PartnerController@handleImage');
+    Route::get('partner/image/{id}', 'Api\PartnerController@showImage');
 
     //Order API JWT
     Route::post('order', 'Api\OrderController@create');
