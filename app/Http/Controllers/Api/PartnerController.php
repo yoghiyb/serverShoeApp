@@ -77,6 +77,9 @@ class PartnerController extends Controller
         return response()->json(compact('partner','token'), 201);
     }
 
+    /**
+     * fungsi login partner
+     */
     public function login(Request $request){
         // ambil request email dan password
         $credentials = $request->only('email', 'password');
