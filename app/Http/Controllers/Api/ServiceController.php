@@ -28,6 +28,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        // memvalidasi semua request
         $validator = Validator::make($request->all(), [
             'partner_id' => 'required|numeric',
             'service' => 'required|string',
@@ -35,13 +36,22 @@ class ServiceController extends Controller
             'price' => 'required|numeric'
         ]);
 
+        // jika tidak lolos validasi maka kirim pesan error
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $service = $request->all();
-        Service::create($service);
+        // jika lolos validasi
+        try {
+            // buat jasa baru
+            $service = $request->all();
+            Service::create($service);
+        } catch (\Throwable $th) {
+            // jika terjadi kesalahan saat membuat jasa baru
+            return response()->json(['error' => $th]);
+        }
 
+        // kirim pesan berhasil
         return response()->json('berhasil membuat jasa', 200);
     }
 
@@ -98,8 +108,14 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy($id)
     {
-        
+        try {
+            $service = Service::findOrFail($id)->delete();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th]);
+        }
+
+        return response()->json(['success' => 'berhasil menghapus jasa'], 200);
     }
 }

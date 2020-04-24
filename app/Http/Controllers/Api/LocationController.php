@@ -17,24 +17,28 @@ class LocationController extends Controller
     public function create(Request $request){
         // memvalidasi semua request
         $validator = Validator::make($request->all(), [
-            'id_partner' => 'required|numeric',
-            'latitude' => 'required|string',
-            'longtitude' => 'required|string'
+            'partner_id' => 'required|numeric',
+            'latitude' => 'required',
+            'longitude' => 'required'
         ]);
 
         // jika tidak lolos validasi
         if($validator->fails()){
             // kirim pesan error
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors()->toJson());
         }
 
         // jika lolos validasi
-        // buat data lokasi baru
-        $location = Location::create([
-            'id_partner' => $request->id_partner,
-            'latitude' => $request->latitude,
-            'longtitude' => $request->longtitude
-        ]);
+        try {
+            // buat data lokasi baru
+            $location = Location::create([
+                'partner_id' => $request->partner_id,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th, 'data' => $request->all()]);
+        }
 
         // kirim pesa sukses
         return response()->json(['sukses' => 'berhasil menyimpan lokasi'], 200);
@@ -44,8 +48,13 @@ class LocationController extends Controller
      * fungsi untuk menampilkan data lokasi berdasarkan partner id
      */
     public function show($partner_id){
-        // cari lokasi berdasarkan partner id
-        $location = Location::findOrFail($partner_id);
+
+        try {
+            // cari lokasi berdasarkan partner id
+        $location = Location::where('partner_id', $partner_id)->first();
+        } catch (\Throwable $th) {
+            return response()->json('gagal');
+        }
 
         // kirim data lokasi
         return response()->json($location, 200);
@@ -57,8 +66,8 @@ class LocationController extends Controller
     public function update(Request $request, $partner_id){
         // memvalidasi semua request
         $validator = Validator::make($request->all(), [
-            'latitude' => 'required|string',
-            'longtitude' => 'required|string'
+            'latitude' => 'required',
+            'longitude' => 'required'
         ]);
 
         // jika tidak lolos validasi
@@ -71,10 +80,10 @@ class LocationController extends Controller
         // update data lokasi berdasarkan partner id
         $location = Location::where('partner_id', $partner_id)->update([
             'latitude' => $request->latitude,
-            'longtitude' => $request->longtitude
+            'longitude' => $request->longitude
         ]);
 
         // kirim pesan sukses
-        return response()->json(['sukse' => 'lokasi berhasil diperbarui'], 200);
+        return response()->json(['sukses' => 'lokasi berhasil diperbarui'], 200);
     }
 }
