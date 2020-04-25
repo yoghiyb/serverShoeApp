@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use App\Partner;
 use App\Order;
 
@@ -26,6 +27,25 @@ class PartnerController extends Controller
     {
         // ambil semua data partner
         $partners = Partner::All();
+
+        try {
+            $partners = collect($partners)->map(function ($data){
+                // mendefinisikan path gambar pertamakali
+                $imgPath = null;
+
+                // cek jika ada data gambar maka isi variabel imgPath dengan url gambar
+                if ($data->store_image != null){
+                    $imgPath = Storage::url($data->store_image);
+                    $data->imgPath = $imgPath;
+                }else{
+                    $data->imgPath = $imgPath;
+                }
+
+                return $data;
+            });
+        } catch (\Throwable $th) {
+            return response()->json($th);
+        }
 
         // kirim semua data partner
         return response()->json($partners, 200);
@@ -123,6 +143,17 @@ class PartnerController extends Controller
     public function show($id){
         // mencari data partner berdasarkan id
         $partner = Partner::findOrFail($id);
+
+        // mendefinisikan path gambar pertamakali
+        $imgPath = null;
+
+        // cek jika ada data gambar maka isi variabel imgPath dengan url gambar
+        if ($partner->store_image != null) {
+            $imgPath = Storage::url($partner->store_image);
+            $partner->imgPath = $imgPath;
+        }
+
+        // $partner->test = 'test';
 
         // tambahkan data lokasi berdasarkan id partner
         $partner->location;
