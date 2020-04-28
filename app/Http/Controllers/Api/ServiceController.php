@@ -64,11 +64,14 @@ class ServiceController extends Controller
     public function show($partner_id)
     {
         try {
+            // cari data jasa berdasarkan partner_id
             $service = Service::where('partner_id', $partner_id)->get();
         } catch (\Throwable $th) {
+            // jika gagal kirim pesan erro
             return response()->json('tidak dapat menemukan jasa', 500);
         }
 
+        // kirim data jasa
         return response()->json($service, 200);
     }
 
@@ -81,6 +84,7 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service, $id)
     {
+        // memvalidasi semua request
         $validator = Validator::make($request->all(), [
             'partner_id' => 'required|numeric',
             'service' => 'required|string',
@@ -88,17 +92,23 @@ class ServiceController extends Controller
             'price' => 'required|numeric'
         ]);
 
+        // jika tidak lolos validasi maka kirim pesan error
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
         try {
+            // tampung semua request kedalam variabel update
             $update = $request->all();
+
+            // update data jasa berdasarkan id
             Service::where('id', $id)->update($update);
         } catch (\Throwable $th) {
+            // jika gagal kirim pesan error
             return response()->json($th, 500);
         }
 
+        // kirim pesan berhasil update jasa
         return response()->json('berhasil update jasa', 200);
     }
 
@@ -111,11 +121,14 @@ class ServiceController extends Controller
     public function destroy($id)
     {
         try {
+            // cari data jasa berdasarkan id dan hapus
             $service = Service::findOrFail($id)->delete();
         } catch (\Throwable $th) {
+            // jika gagal kirim pesan error
             return response()->json(['error' => $th]);
         }
 
+        // kirim pesan jika berhasil
         return response()->json(['success' => 'berhasil menghapus jasa'], 200);
     }
 }

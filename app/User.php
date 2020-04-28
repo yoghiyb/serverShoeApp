@@ -38,6 +38,10 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    public function order(){
+        return $this->hasOne('App\Order');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

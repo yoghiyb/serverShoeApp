@@ -40,7 +40,8 @@ Route::middleware('jwt.verify')->group(function(){
 
     //Order API JWT
     Route::post('order', 'Api\OrderController@create');
-    Route::post('order/confirm', 'Api\OrderController@confirmation');
+    // Route::get('order/{id}', 'Api\OrderController@show');
+    Route::get('order/partner/{id}', 'Api\OrderController@orderListPartner');
     Route::get('order/list/{id}', 'Api\OrderController@showAllLastOrder');
     Route::get('order/{order_no}', 'Api\OrderController@showByOrderNo');
 

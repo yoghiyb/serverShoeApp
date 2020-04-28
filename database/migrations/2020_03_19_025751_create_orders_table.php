@@ -28,7 +28,7 @@ class CreateOrdersTable extends Migration
             $table->string('status');
             $table->timestamps();
 
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('service_id')->references('id')->on('service');
         });
     }
 

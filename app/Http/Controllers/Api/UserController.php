@@ -36,7 +36,7 @@ class UserController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         // kirim data user dan token
-        return response()->json(compact('token', 'user'));
+        return response()->json(compact('token', 'user'),200);
     }
 
     /**
@@ -48,7 +48,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         // jika tidak lolos validasi
@@ -69,7 +69,7 @@ class UserController extends Controller
         $token = JWTAuth::fromUser($user);
 
         // kirim data user dan token
-        return response()->json(compact('user','token'),201);
+        return response()->json(compact('user','token'),200);
     }
 
     public function getAuthenticatedUser()
